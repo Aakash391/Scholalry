@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Paper Search</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .form-input {
+            @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+            transition: all 0.3s ease;
+        }
+        .form-label {
+            @apply block text-sm font-medium text-gray-700;
+        }
+        .form-group {
+            @apply mb-4;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow rounded-lg p-6">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Research Paper Search</h2>
+                <p class="mt-2 text-sm text-gray-600">Find academic papers across multiple publishers and databases</p>
+            </div>
+            
+            <form action="/" method="POST" class="space-y-6">
+                <div class="form-group">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="title" id="title" 
+                           class="form-input h-10 px-3 w-full border rounded-md" 
+                           placeholder="Enter paper title">
+                </div>
+                
+                <div class="form-group">
+                    <label for="authors" class="form-label">Authors</label>
+                    <input type="text" name="authors" id="authors" 
+                           class="form-input h-10 px-3 w-full border rounded-md" 
+                           placeholder="Enter authors (comma-separated)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="affiliation" class="form-label">Affiliation</label>
+                    <input type="text" name="affiliation" id="affiliation" 
+                           class="form-input h-10 px-3 w-full border rounded-md" 
+                           placeholder="Enter institution or organization">
+                </div>
+                
+                <div class="form-group">
+                    <label for="date" class="form-label">Publication Date</label>
+                    <input type="date" name="date" id="date" 
+                           class="form-input h-10 px-3 w-full border rounded-md">
+                </div>
+                
+                <div class="form-group">
+                    <label for="doi" class="form-label">DOI</label>
+                    <input type="text" name="doi" id="doi" 
+                           class="form-input h-10 px-3 w-full border rounded-md" 
+                           placeholder="Enter DOI number">
+                </div>
+
+                <div class="form-group">
+                    <label for="refcount" class="form-label">Reference Count</label>
+                    <input type="number" name="refcount" id="refcount" 
+                           class="form-input h-10 px-3 w-full border rounded-md" 
+                           placeholder="Enter reference count">
+                </div>
+            
+
+                <div class="form-group">
+                    <label for="publisher_organization" class="form-label">Publisher</label>
+                    <select name="publisher_organization" id="publisher_organization" 
+                            class="form-input h-10 px-3 w-full border rounded-md">
+                        <option value="All" selected>All</option>
+                        <option value="IEEE">IEEE</option>
+                        <option value="CVPR">CVPR</option>
+                        <option value="ResearchGate">Research Gate</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="keywords" class="form-label">Keywords</label>
+                    <input type="text" name="keywords" id="keywords" 
+                           class="form-input h-10 px-3 w-full border rounded-md" 
+                           placeholder="Enter keywords (comma-separated)">
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" 
+                            class="w-full sm:w-auto px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
+                        Search Papers
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const dateInput = document.getElementById('date');
+            const dateValue = dateInput.value;
+            if (dateValue) {
+                const [year, month, day] = dateValue.split('-');
+                const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const formattedDate = ${day}-${monthNames[parseInt(month) - 1]}-${year};
+                dateInput.value = formattedDate;
+            }
+        });
+    </script>
+</body>
+</html>
