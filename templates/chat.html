@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Chat Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .input-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+        #submit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        #submit-btn:hover {
+            background-color: #45a049;
+        }
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .user-input, .bot-response {
+            margin-bottom: 10px;
+        }
+        .user-input {
+            font-weight: bold;
+            color: #333;
+        }
+        .bot-response {
+            color: #666;
+        }
+        .error {
+            color: red;
+            background-color: #ffeeee;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        function openResultsTab(resultsUrl) {
+            // Open results page in a new tab
+            window.open(resultsUrl, "_blank");
+        }
+    </script>
+</head>
+<body>
+    <div class="chat-container">
+        <h1>LLM Chat Interface</h1>
+        
+        <!-- Submit form to the backend -->
+        <form method="post" action="/chat">
+            <div class="input-container">
+                <input type="text" id="user-input" name="user_input" 
+                       placeholder="Enter your query..." 
+                       value="{{ user_input if user_input else '' }}" 
+                       required>
+                <button type="submit" id="submit-btn">Send</button>
+            </div>
+        </form>
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if bot_response %}
+        <div class="response-container">
+            <div class="user-input">
+                <strong>You:</strong> {{ user_input }}
+            </div>
+            <div class="bot-response">
+                <strong>AI:</strong> {{ bot_response }}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Open results in a new tab if results exist -->
+        {% if results %}
+        <script>
+            openResultsTab('/results'); // Replace '/results' with the actual results URL
+        </script>
+        {% endif %}
+    </div>
+</body>
+</html>
+
