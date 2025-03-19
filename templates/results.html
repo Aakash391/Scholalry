@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .table-header {
+            @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+        }
+        .table-cell {
+            @apply px-6 py-4 whitespace-normal text-sm text-gray-900;
+        }
+        .paper-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .paper-card:hover {
+            transform: translateY(-2px);
+        }
+        .abstract-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .abstract-expanded {
+            -webkit-line-clamp: unset;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Search Results</h2>
+            <p class="mt-2 text-sm text-gray-600">Showing matching research papers from our database</p>
+        </div>
+
+        {% if results %}
+        <div class="flex flex-col space-y-6">
+            {% for result in results %}
+            <div class="bg-white shadow rounded-lg paper-card">
+                <div class="px-6 py-5">
+                    <!-- Header Section -->
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center">
+                                <h3 class="text-xl font-semibold text-indigo-600 hover:text-indigo-700">
+                                    {{ result.title }}
+                                </h3>
+                                <span class="ml-3 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    {{ result.type }}
+                                </span>
+                            </div>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-700">
+                                    <span class="font-medium">Authors:</span> 
+                                    {{ result.authors }}
+                                </p>
+                                <p class="mt-1 text-sm text-gray-700">
+                                    <span class="font-medium">Affiliation:</span> 
+                                    {{ result.affiliation }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="ml-4 flex-shrink-0">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                                {{ result.publisher_organization }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Abstract Section -->
+                    <div class="mt-4">
+                        <div class="text-sm text-gray-700">
+                            <span class="font-medium">Abstract:</span>
+                            <div class="mt-1 abstract-text" id="abstract-{{ loop.index }}">
+                                {{ result.abstract }}
+                            </div>
+                            <button onclick="toggleAbstract({{ loop.index }})" 
+                                    class="mt-2 text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                                Show more
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Publication Details Grid -->
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">Published Date:</span>
+                            <p class="mt-1 text-gray-900">{{ result.published_date }}</p>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">DOI:</span>
+                            <p class="mt-1 text-gray-900">
+                                <a href="https://doi.org/{{ result.doi }}" class="text-indigo-600 hover:text-indigo-900">
+                                    {{ result.doi }}
+                                </a>
+                            </p>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">Journal:</span>
+                            <p class="mt-1 text-gray-900">{{ result.journal }}</p>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">ISSN:</span>
+                            <p class="mt-1 text-gray-900">{{ result.issn }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Additional Details Grid -->
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">Volume:</span>
+                            <p class="mt-1 text-gray-900">{{ result.volume }}</p>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">Issue:</span>
+                            <p class="mt-1 text-gray-900">{{ result.issue }}</p>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">Reference Count:</span>
+                            <p class="mt-1 text-gray-900">{{ result.ref_count }}</p>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium text-gray-500">URL:</span>
+                            <p class="mt-1 text-gray-900">
+                                <a href="{{ result.url }}" target="_blank" class="text-indigo-600 hover:text-indigo-900">
+                                    View Article
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Keywords Section -->
+                    <div class="mt-4">
+                        <span class="text-sm font-medium text-gray-500">Keywords:</span>
+                        <div class="mt-2 flex flex-wrap gap-1">
+                            {% for keyword in result.keywords %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {{ keyword.strip() }}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6 text-center">
+                <div class="text-sm text-gray-500">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="mt-4 text-lg font-medium text-gray-900">No results found</p>
+                    <p class="mt-2">Try adjusting your search criteria or try different keywords.</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="mt-8 text-center">
+            <a href="javascript:history.back()" 
+               class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                ← Back to Search
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleAbstract(index) {
+            const abstract = document.getElementById(abstract-${index});
+            const button = abstract.nextElementSibling;
+            
+            abstract.classList.toggle('abstract-expanded');
+            button.textContent = abstract.classList.contains('abstract-expanded') ? 'Show less' : 'Show more';
+        }
+    </script>
+</body>
+</html>
